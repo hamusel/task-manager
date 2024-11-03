@@ -1,0 +1,31 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+}
+
+body {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    border: 5px solid black;
+    text-align: center;
+}
+
+#header {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    border: 5px solid black;
+}
