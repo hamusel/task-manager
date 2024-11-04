@@ -8,24 +8,80 @@
 
 body {
     font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+    background-color: gray;
 }
 
 #container {
     display: flex;
-    justify-content: center;
+    height: 100vh;
 }
+
 
 #sidebar {
     display: flex;
     flex-direction: column;
     width: 25%;
     border: 5px solid black;
-    text-align: center;
 }
 
-#header {
+#content {
     display: flex;
     flex-direction: column;
     width: 75%;
+}
+
+#header {
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
     border: 5px solid black;
+}
+
+#sidebar-title {
+    text-align: center;
+    height: 20%;
+    border: 5px solid black;
+}
+
+button {
+    font-size: 20px;
+    width: 75px;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+li {
+    border: 1px solid black;
+}
+
+.toDo {
+    /*font-size: 40px;*/
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+    min-width: 300px;
+}
+
+.hidden {
+    display: none;
 }
