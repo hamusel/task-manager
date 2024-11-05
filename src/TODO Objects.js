@@ -1,9 +1,10 @@
 class ToDo {
-    constructor(title, description, dueDate, priority) {
+    constructor(title, description, dueDate, priority, project) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.project = project;
     }
 
     getTitle() {
@@ -39,16 +40,21 @@ class ToDo {
     }
 
     info() {
-        return "title: " + this.title + "\n" + this.description + "\n";
+        return this.title + " " + this.description + " - " + this.dueDate;
     }
 
 }
 
 class Project {
-    constructor(title, dueDate, toDos) {
+    constructor(title, dueDate, toDos, index) {
         this.title = title;
         this.dueDate = dueDate;
         this.toDos = toDos;
+        this.index = index;
+    }
+
+    getIndex() {
+        return this.index;
     }
 
     addToDo(toDo) {
@@ -60,6 +66,10 @@ class Project {
         if (index > -1) {
             this.toDos.splice(index, 1);
         }
+    }
+
+    info() {
+        return this.title + " - " + this.dueDate;
     }
 }
 

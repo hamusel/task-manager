@@ -5,3 +5,4 @@ import {ToDo, Project} from "./TODO Objects";
 const addTask = document.getElementById("add");
 const body = document.querySelector("body");
 const toDo = new ToDosHandler();
+const project = new ProjectsHandler();
