@@ -1,26 +1,36 @@
 import {Project, ToDo} from "./TODO Objects";
 
+
+class TaskManager {
+    constructor() {
+        new ProjectsHandler();
+    }
+}
+
 class ProjectsHandler {
     constructor() {
         this.projectsList = document.getElementById('projects-list');
-        this.projectIndex = 0;
-        this.selectedProject = 0;
+        this.NamingProjectIndex = this.findMyIndex();
         this.addProjectButton = document.getElementById('addProject');
         this.addProjectButton.addEventListener('click', () => this.addProject());
-        this.toDosHandler = new ToDosHandler(this.selectedProject);
+        this.toDosHandlers = [];
         this.addProject();
     }
 
+    findMyIndex() {
+        //TODO: write method to decide the ID of a certain project
+    }
+
     addProject() {
-        this.projectIndex++;
-        this.selectedProject = this.projectIndex;
+        const projectID = this.NamingProjectIndex;
+        const toDosHandler = new ToDosHandler();
+        this.toDosHandlers[projectID] = toDosHandler;
 
         const projectItem = document.createElement('li');
         projectItem.classList.add('project');
-        projectItem.innerText = "Project " + this.projectIndex;
-        const project = new Project("Project " + this.projectIndex, "01.01.01", [], this.projectIndex);
+        projectItem.innerText = "Project " + projectID;
+        projectItem.dataset.projectId = projectID;
         this.projectsList.appendChild(projectItem);
-
 
         const buttonDiv = document.createElement("div");
         buttonDiv.classList.add("buttonContainer");
@@ -31,22 +41,26 @@ class ProjectsHandler {
         removeButton.textContent = "remove";
 
         projectItem.addEventListener('click', () => {
-            this.selectedProject = project.getIndex();
-            this.toDosHandler.displayToDos();
+            toDosHandler.displayToDos();
         });
 
-        removeButton.addEventListener("click", () => this.removeProject(projectItem))
+        removeButton.addEventListener("click", () => this.removeProject(projectItem, projectID));
+
+        this.NamingProjectIndex++;
     }
 
-    removeProject(project) {
-        this.projectIndex--;
-        this.projectsList.removeChild(project);
+    removeProject(projectItem, projectID) {
+        this.projectsList.removeChild(projectItem);
+
+        if (this.toDosHandlers[projectID]) {
+            this.toDosHandlers[projectID].removeToDos();
+            delete this.toDosHandlers[projectID];
+        }
     }
 }
 
 class ToDosHandler {
-    constructor(selectedProject) {
-        this.selectedProject = selectedProject;
+    constructor() {
         this.toDos = [];
         this.toDosList = document.getElementById('toDos-list');
         this.popup = document.getElementById('popup');
@@ -56,7 +70,7 @@ class ToDosHandler {
 
         this.openPopupButton.addEventListener("click", () => this.openPopup());
         this.closeButton.addEventListener("click", () => this.closePopup());
-        this.addButton.addEventListener("click", () => this.addToDo())
+        this.addButton.addEventListener("click", () => this.addToDo());
     }
 
     addToDo() {
@@ -65,32 +79,43 @@ class ToDosHandler {
         const description = document.getElementById('description').value;
         const priority = document.getElementById('priority').value;
 
-
-        const toDoItem = document.createElement('li');
-        toDoItem.classList.add('toDo');
-        const toDo = new ToDo(title, description, dueDate, priority, this.selectedProject)
+        const toDo = new ToDo(title, description, dueDate, priority);
         this.toDos.push(toDo);
-        toDoItem.innerText = toDo.info();
-        this.toDosList.appendChild(toDoItem);
-
-        const buttonDiv = document.createElement("div");
-        buttonDiv.classList.add("buttonContainer");
-        toDoItem.appendChild(buttonDiv);
-        const removeButton = document.createElement("button");
-        removeButton.classList.add("removeButton");
-        buttonDiv.appendChild(removeButton);
-        removeButton.textContent = "remove";
-
-        removeButton.addEventListener("click", () => this.removeToDo(toDoItem))
+        this.displayToDos();
     }
 
     displayToDos() {
-        this.toDos.forEach(
-        )
+        while (this.toDosList.firstChild) {
+            this.toDosList.removeChild(this.toDosList.firstChild);
+        }
+
+        this.toDos.forEach((toDo, index) => {
+            const toDoItem = document.createElement('li');
+            toDoItem.classList.add('toDo');
+            toDoItem.innerText = toDo.info();
+            this.toDosList.appendChild(toDoItem);
+
+            const buttonDiv = document.createElement("div");
+            buttonDiv.classList.add("buttonContainer");
+            toDoItem.appendChild(buttonDiv);
+
+            const removeButton = document.createElement("button");
+            removeButton.classList.add("removeButton");
+            buttonDiv.appendChild(removeButton);
+            removeButton.textContent = "remove";
+
+            removeButton.addEventListener("click", () => this.removeToDo(toDoItem, index));
+        });
     }
 
-    removeToDo(toDo) {
-        this.toDosList.removeChild(toDo);
+    removeToDos() {
+        this.toDos = [];
+        this.displayToDos();
+    }
+
+    removeToDo(toDoItem, index) {
+        this.toDos.splice(index, 1);
+        this.displayToDos();
     }
 
     openPopup() {
